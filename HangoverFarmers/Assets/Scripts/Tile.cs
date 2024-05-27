@@ -33,7 +33,7 @@ public class Tile : MonoBehaviour
             selected.Unselect();
             if (Vector2Int.Distance(selected.Position, Position) == 1)
             {
-                GridManager.Instance.SwapTiles(Position, selected.Position);
+               // GridManager.Instance.SwapTiles(Position, selected.Position);
                 selected = null;
             }
             else
