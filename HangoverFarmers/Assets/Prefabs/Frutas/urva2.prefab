@@ -148,7 +148,6 @@ MonoBehaviour:
   x: 0
   y: 0
   board: {fileID: 0}
-  SpriteRender: {fileID: 0}
 --- !u!1 &4056892431991694177
 GameObject:
   m_ObjectHideFlags: 0
