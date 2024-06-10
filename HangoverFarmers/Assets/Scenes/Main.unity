@@ -142,7 +142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6065486333271592240, guid: 663dcb8e031487549bd295fc6679dde5, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6800109277245194074, guid: 663dcb8e031487549bd295fc6679dde5, type: 3}
       propertyPath: m_IsActive
@@ -582,6 +582,7 @@ MonoBehaviour:
   - {fileID: 2915029873176705244, guid: 3163ddd82c98c3545bcee41230480b09, type: 3}
   - {fileID: 9057235646182911196, guid: 913948dba52e737449e165f22b2ce309, type: 3}
   vector3Base: {x: 0.8, y: 0.8, z: 0.8}
+  obstaclePrefab: {fileID: 7573765639420712688, guid: 77eb20808fb90cd4592eea54f4c80362, type: 3}
 --- !u!4 &759014405
 Transform:
   m_ObjectHideFlags: 0
