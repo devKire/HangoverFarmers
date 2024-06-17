@@ -102,6 +102,7 @@ public enum FrutType
     melancia,
     pinha,
     uva,
-    poder
+    poder,
+    Obstacle
 }
 

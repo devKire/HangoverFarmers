@@ -10,6 +10,7 @@ public class Board : MonoBehaviour
     public Piece[,] pieces;
     private Piece selectedPiece;
     public Vector3 vector3Base;
+    public GameObject obstaclePrefab;
 
     void Start()
     {
@@ -23,13 +24,28 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                GameObject newPiece = Instantiate(piecePrefab[RandomFrut()], new Vector3(x, y, 0), Quaternion.identity);
-                if (newPiece != null)
+                if (Random.value < 0.1f) // 10% de chance de ser um obstáculo
                 {
-                    pieces[x, y] = newPiece.GetComponent<Piece>();
-                    if (pieces[x, y] != null)
+                    GameObject newObstacle = Instantiate(obstaclePrefab, new Vector3(x, y, 0), Quaternion.identity);
+                    if (newObstacle != null)
                     {
-                        pieces[x, y].Init(x, y, this);
+                        pieces[x, y] = newObstacle.GetComponent<Piece>();
+                        if (pieces[x, y] != null)
+                        {
+                            pieces[x, y].Init(x, y, this);
+                        }
+                    }
+                }
+                else
+                {
+                    GameObject newPiece = Instantiate(piecePrefab[RandomFrut()], new Vector3(x, y, 0), Quaternion.identity);
+                    if (newPiece != null)
+                    {
+                        pieces[x, y] = newPiece.GetComponent<Piece>();
+                        if (pieces[x, y] != null)
+                        {
+                            pieces[x, y].Init(x, y, this);
+                        }
                     }
                 }
             }
@@ -44,6 +60,8 @@ public class Board : MonoBehaviour
 
     public void SelectPiece(Piece piece)
     {
+        if (piece.frutType == FrutType.Obstacle) return; // Impede a seleção de peças de obstáculo
+
         if (selectedPiece == null)
         {
             selectedPiece = piece;
@@ -74,6 +92,8 @@ public class Board : MonoBehaviour
 
     void SwapPieces(Piece piece1, Piece piece2)
     {
+        if (piece1.frutType == FrutType.Obstacle || piece2.frutType == FrutType.Obstacle) return; // Impede a troca se uma das peças for um obstáculo
+
         int tempX = piece1.x;
         int tempY = piece1.y;
 
@@ -162,7 +182,45 @@ public class Board : MonoBehaviour
             }
         }
 
+        DestroyAdjacentObstacles(piecesToDestroy);
         StartCoroutine(RefillBoard());
+    }
+
+    void DestroyAdjacentObstacles(List<Piece> matchedPieces)
+    {
+        HashSet<Piece> obstaclesToDestroy = new HashSet<Piece>();
+
+        foreach (Piece piece in matchedPieces)
+        {
+            int x = piece.x;
+            int y = piece.y;
+
+            if (x > 0 && pieces[x - 1, y]?.frutType == FrutType.Obstacle)
+            {
+                obstaclesToDestroy.Add(pieces[x - 1, y]);
+            }
+            if (x < width - 1 && pieces[x + 1, y]?.frutType == FrutType.Obstacle)
+            {
+                obstaclesToDestroy.Add(pieces[x + 1, y]);
+            }
+            if (y > 0 && pieces[x, y - 1]?.frutType == FrutType.Obstacle)
+            {
+                obstaclesToDestroy.Add(pieces[x, y - 1]);
+            }
+            if (y < height - 1 && pieces[x, y + 1]?.frutType == FrutType.Obstacle)
+            {
+                obstaclesToDestroy.Add(pieces[x, y + 1]);
+            }
+        }
+
+        foreach (Piece obstacle in obstaclesToDestroy)
+        {
+            if (obstacle != null)
+            {
+                pieces[obstacle.x, obstacle.y] = null;
+                Destroy(obstacle.gameObject);
+            }
+        }
     }
 
     IEnumerator RefillBoard()
